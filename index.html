@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Pacman</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css2?family=Emulogic&display=swap" rel="stylesheet">
-    </head>
-    <style>
-        @font-face {
-            font-family: 'Emulogic';
-            src: url('assets/Emulogic.ttf') format('truetype');
-        }
-        body {
-            font-family: 'Emulogic', sans-serif;
-        }
-    </style>
-    <body style="margin: 0px; background-color: black; overflow-x:hidden; overflow-y:hidden;">
-        <canvas id="gameCanvas" width="500" height="500"></canvas>
-        <div style="display: none;">
-            <img id="animations" src="assets/animations.gif" alt="">
-            <img id="ghosts" src="assets/ghost.png" alt="">
-        </div>
-        <div>
-            <label style="color: white;">Debug</label>
-            <input type="checkbox" id="isDebug" name="isDebug" value="isDebug">
-        </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Pacman</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Emulogic&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    @font-face {
+      font-family: "Emulogic";
+      src: url("assets/Emulogic.ttf") format("truetype");
+    }
+    body {
+        font-family: "Emulogic", sans-serif;
+        margin: 0;
+        background-color: black;
+        margin: 0px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        height: 100vh; /* Full viewport height */
+    }
+    
+  </style>
+  <body
+  >
+    <canvas id="gameCanvas" width="500" height="500"></canvas>
+    <div style="display: none">
+      <img id="animations" src="assets/animations.gif" alt="" />
+      <img id="ghosts" src="assets/ghost.png" alt="" />
+    </div>
+    <div
+    style="display: flex; align-items: center; justify-content: start; width: 100%; gap:10px;">
+      <label style="color: white">Debug</label>
+      <input type="checkbox" id="isDebug" name="isDebug" value="isDebug" />
+    </div>
 
-        <script src="js/ghost.js"></script>
-        <script src="js/pacman.js"></script>
-        <script src="js/game.js"></script>
-    </body>
+    <script src="js/ghost.js"></script>
+    <script src="js/pacman.js"></script>
+    <script src="js/game.js"></script>
+  </body>
 </html>
