@@ -34,6 +34,12 @@ class Pacman{
                     ghosts.forEach(ghost=>{
                         ghost.isScared = true;
                     });
+                    // 7seconds timer
+                    setTimeout(()=>{
+                        ghosts.forEach(ghost=>{
+                            ghost.isScared = false;
+                        });
+                    },7000);
                 }
             }
         }
