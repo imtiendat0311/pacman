@@ -82,6 +82,8 @@ class Pacman{
     }
 
     changeDirectionIfPossible(){
+        console.log(this.getMapX(), this.getMapY());
+
         if(this.direction == this.nextDirection){
             return;
         }

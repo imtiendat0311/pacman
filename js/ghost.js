@@ -277,6 +277,13 @@ class Ghost {
 
   changeDirectionIfPossible() {
     let tempDirection = this.direction;
+    // tunnel
+    if (this.getMapY() == 10 && (this.getMapX() == 1)) {
+        this.direction = DIRECTION_RIGHT;
+    }
+    else if (this.getMapY() == 10 && (this.getMapX() == 19)) {
+        this.direction = DIRECTION_LEFT;
+    }
     // dead first 
     if (this.isDead) {
         this.target = {
