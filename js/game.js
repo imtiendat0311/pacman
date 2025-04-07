@@ -16,7 +16,7 @@ let isScatter = true;
 
 let scatterDuration = 7000; // 7 seconds for scatter mode
 let chaseDuration = 20000; // 20 seconds for chase mode
-
+let frightenDuration = 5000; // 5 seconds for frighten mode
 let isDebug = false;
 let ghostImageLocations = [
   { x: 0, y: 0 }, //red
@@ -61,6 +61,27 @@ let map = [
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+list_food = []
+
+list_fruit = [];
+
+for (let i = 0;i < map.length ; i++){
+    for(let j = 0; j < map[i].length; j++){
+        if(map[i][j] == 2){
+            list_food.push({x: j, y: i});
+        }
+    }
+}
+for (let i =0;i<4;i++){
+    let randomIndex = Math.floor(Math.random() * list_food.length);
+    let randomFood = list_food[randomIndex];
+    list_fruit.push(randomFood);
+    list_food.splice(randomIndex, 1); // Remove the selected food from the list
+    map[randomFood.y][randomFood.x] = 5; // Set the food position to 0 in the map
+}
+
+let ghostFrighten = [false, false, false, false]; // 4 ghosts
+
 let ghostTargets = [
   { x: map[0].length - 1 - 1, y: 0 + 1, c: "255,0,0" }, // top left corner
   { x: 0 + 1, y: map.length - 1 - 1, c: "255,127,80" }, // bottom left corner
@@ -106,6 +127,16 @@ let drawFood = () => {
           oneBlockSize / 5,
           foodColor
         );
+      }
+      // draw fruit
+      if (map[i][j] == 5){
+        createRect(
+            j * oneBlockSize + oneBlockSize / 4,
+            i * oneBlockSize + oneBlockSize / 4,
+            oneBlockSize / 2,
+            oneBlockSize / 2,
+            foodColor
+          );
       }
     }
   }
@@ -164,7 +195,7 @@ let drawClydeTarget = () => {
 };
 let drawInkyTarget = () => {
   // draw Inky target when chase mode
-  canvasContext.fillStyle = `rgba(0,255,255,0.75)`;
+  canvasContext.fillStyle = `rgba(0,255,255,0.5)`;
   // Calculate Inky's target based on Pacman's position and direction
   let pacmanTargetX = pacman.getMapX();
   let pacmanTargetY = pacman.getMapY();
@@ -195,8 +226,21 @@ let drawInkyTarget = () => {
 };
 
 let drawGhostsTarget = () => {
+  // draw ghost targets when dead
+  for (let i = 0; i < ghosts.length; i++) {
+    if (ghosts[i].isDead){
+      canvasContext.fillStyle = `rgba(${ghostTargets[i].c}, 1)`;
+      canvasContext.fillRect(
+        (9 * oneBlockSize) + oneBlockSize,
+        (10 * oneBlockSize) + oneBlockSize,
+        oneBlockSize,
+        oneBlockSize
+      );
+    }
+  }
   if (isScatter) {
     for (let i = 0; i < ghosts.length; i++) {
+      if (ghosts[i].isDead) continue;
       canvasContext.fillStyle = `rgba(${ghostTargets[i].c}, 0.75)`;
       canvasContext.fillRect(
         ghostTargets[i].x * oneBlockSize,

@@ -18,6 +18,7 @@ class Ghost {
     this.target = st;
     this.name = n; // name of the ghost
     this.moveSet = [];
+    this.isDead = false; // if the ghost is dead
     setInterval(() => {
       this.changeAnimation();
     }, 100);
@@ -47,7 +48,7 @@ class Ghost {
         break;
     }
   }
-  
+
   moveForward() {
     switch (this.direction) {
       case DIRECTION_RIGHT:
@@ -276,7 +277,22 @@ class Ghost {
 
   changeDirectionIfPossible() {
     let tempDirection = this.direction;
-    if (isScatter) {
+    // dead first 
+    if (this.isDead) {
+        this.target = {
+            x: (9 * oneBlockSize) + oneBlockSize,
+            y: (10 * oneBlockSize)+ oneBlockSize,
+        }
+        if(this.getMapX() == this.target.x/oneBlockSize && this.getMapY() == this.target.y/oneBlockSize) {
+            this.isDead = false;
+        }
+        this.direction = this.calculateNewDirection(
+            map,
+            parseInt(this.target.x / oneBlockSize),
+            parseInt(this.target.y / oneBlockSize)
+        );
+    }
+    else if (isScatter) {
       this.target = this.st;
       // scatter mode
       this.direction = this.calculateNewDirection(
