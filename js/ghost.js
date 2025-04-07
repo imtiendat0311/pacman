@@ -19,6 +19,8 @@ class Ghost {
     this.name = n; // name of the ghost
     this.moveSet = [];
     this.isDead = false; // if the ghost is dead
+    this.isScared = false;
+    this.isFlashing = false;
     setInterval(() => {
       this.changeAnimation();
     }, 100);
@@ -199,7 +201,8 @@ class Ghost {
     // Check all four directions
     if (
       this.getMapY() > 0 &&
-      map[this.getMapY() - 1][this.getMapX()] !== 1 &&
+      map[this.getMapY() - 1][this.getMapX()] !== 1 && 
+      map[this.getMapY() - 1][this.getMapX()] !== 6 && 
       this.direction !== DIRECTION_DOWN
     ) {
       availableDirections.push(DIRECTION_UP);
@@ -208,6 +211,7 @@ class Ghost {
     if (
       this.getMapY() < map.length - 1 &&
       map[this.getMapY() + 1][this.getMapX()] !== 1 &&
+        map[this.getMapY() + 1][this.getMapX()] !== 6 &&
       this.direction !== DIRECTION_UP
     ) {
       availableDirections.push(DIRECTION_DOWN);
@@ -216,6 +220,7 @@ class Ghost {
     if (
       this.getMapX() > 0 &&
       map[this.getMapY()][this.getMapX() - 1] !== 1 &&
+        map[this.getMapY()][this.getMapX() - 1] !== 6 &&
       this.direction !== DIRECTION_RIGHT
     ) {
       availableDirections.push(DIRECTION_LEFT);
@@ -224,6 +229,7 @@ class Ghost {
     if (
       this.getMapX() < map[0].length - 1 &&
       map[this.getMapY()][this.getMapX() + 1] !== 1 &&
+        map[this.getMapY()][this.getMapX() + 1] !== 6 &&
       this.direction !== DIRECTION_LEFT
     ) {
       availableDirections.push(DIRECTION_RIGHT);
@@ -277,21 +283,31 @@ class Ghost {
 
   changeDirectionIfPossible() {
     let tempDirection = this.direction;
+    let flag = false;
     // tunnel
     if (this.getMapY() == 10 && (this.getMapX() == 1)) {
         this.direction = DIRECTION_RIGHT;
+        flag = true;
     }
     else if (this.getMapY() == 10 && (this.getMapX() == 19)) {
         this.direction = DIRECTION_LEFT;
+        flag = true;
+    }
+    else if (this.getMapY() == 10 && (this.getMapX() == 10)) {
+        this.direction = DIRECTION_UP;
+        flag = true;
+        this.isDead = false
+
     }
     // dead first 
-    if (this.isDead) {
+    if (this.isDead && !flag) {
         this.target = {
             x: (9 * oneBlockSize) + oneBlockSize,
             y: (10 * oneBlockSize)+ oneBlockSize,
         }
         if(this.getMapX() == this.target.x/oneBlockSize && this.getMapY() == this.target.y/oneBlockSize) {
             this.isDead = false;
+            this.isScared = false;
         }
         this.direction = this.calculateNewDirection(
             map,
@@ -299,7 +315,7 @@ class Ghost {
             parseInt(this.target.y / oneBlockSize)
         );
     }
-    else if (isScatter) {
+    else if (isScatter  && !flag) {
       this.target = this.st;
       // scatter mode
       this.direction = this.calculateNewDirection(
@@ -467,19 +483,77 @@ class Ghost {
   getMapYRight() {
     return parseInt((this.y + 0.9999 * oneBlockSize) / oneBlockSize);
   }
+  removeGrayBackground(x, y, w, h) {
+    let imageData = canvasContext.getImageData(x, y, w, h);
+    let data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+        // Check if the pixel is gray (R=G=B=128)
+        if (data[i] === 64 && data[i + 1] === 64 && data[i + 2] === 64) {
+            data[i + 3] = 0; // Set alpha to 0 (transparent)
+        }
+    }
+
+    // Put the modified image data back onto the canvas
+    canvasContext.putImageData(imageData, x, y);
+}
   draw() {
     canvasContext.save();
-    canvasContext.drawImage(
-      ghostFrame,
-      this.ix,
-      this.iy,
-      this.iw,
-      this.ih,
-      this.x,
-      this.y,
-      this.w,
-      this.h
-    );
-    canvasContext.restore();
+    if (this.isDead){
+        let sx = 5*32;
+        let sy = 7*32;
+        let sw = 32;
+        let sh = 32;
+        canvasContext.drawImage(
+            spriteSheet,
+            sx,
+            sy,
+            sw,
+            sh,
+            this.x,
+            this.y,
+            this.w,
+            this.h
+        )
+        this.removeGrayBackground(this.x, this.y, this.w, this.h);
+        canvasContext.restore();
+        return;
+    }
+    else if(this.isScared){
+        let sx = this.isFlashing ? 160 : 160+(32*2); // X-coordinate of the sprite (16px for flashing)
+        let sy = 64-32; // Y-coordinate of the fifth row (row index 4, each row is 16px tall)
+        let sw = 32; // Width of the sprite
+        let sh = 32; // Height of the sprite
+        canvasContext.drawImage(
+            spriteSheet,
+            sx,
+            sy,
+            sw,
+            sh,
+            this.x,
+            this.y,
+            this.w,
+            this.h
+        )
+        this.removeGrayBackground(this.x, this.y, this.w, this.h);
+        this.isFlashing = !this.isFlashing;
+        canvasContext.restore();
+        return;
+    }else{
+        canvasContext.drawImage(
+            ghostFrame,
+            this.ix,
+            this.iy,
+            this.iw,
+            this.ih,
+            this.x,
+            this.y,
+            this.w,
+            this.h
+          );
+          canvasContext.restore();
+          return;
+        
+    }
   }
 }

@@ -29,6 +29,12 @@ class Pacman{
                     map[i][j] = 3;
                     score++;
                 }
+                if(map[i][j] == 5 && this.getMapX() == j && this.getMapY() == i){
+                    map[i][j] = 3;
+                    ghosts.forEach(ghost=>{
+                        ghost.isScared = true;
+                    });
+                }
             }
         }
     }
@@ -78,12 +84,20 @@ class Pacman{
   
     }
     checkGhostCollision(){
-
+        for(let i =0 ; i < ghosts.length;i++){
+            if(this.getMapX() == ghosts[i].getMapX() && this.getMapY() == ghosts[i].getMapY()){
+                console.log("ghost collision");
+                if(ghosts[i].isScared){
+                    console.log("ghost is dead");
+                    ghosts[i].isDead = true;
+                    ghosts[i].isScared = false;
+                }
+            }
+        }
     }
 
     changeDirectionIfPossible(){
-        console.log(this.getMapX(), this.getMapY());
-
+        this.checkGhostCollision();
         if(this.direction == this.nextDirection){
             return;
         }
