@@ -301,7 +301,6 @@ class Ghost {
         this.direction = DIRECTION_UP;
         flag = true;
         this.isDead = false
-
     }
     // dead first 
     if (this.isDead && !flag) {
@@ -318,6 +317,9 @@ class Ghost {
             parseInt(this.target.x / oneBlockSize),
             parseInt(this.target.y / oneBlockSize)
         );
+    }else if (this.isScared && !flag) {
+      this.direction = this.findAvailableDirection(map);
+      this.moveSet = [this.direction]
     }
     else if (isScatter  && !flag) {
       this.target = this.st;

@@ -270,6 +270,7 @@ let drawGhostsTarget = () => {
   if (isScatter) {
     for (let i = 0; i < ghosts.length; i++) {
       if (ghosts[i].isDead) continue;
+      if (ghosts[i].isScared) continue;
       canvasContext.fillStyle = `rgba(${ghostTargets[i].c}, 0.75)`;
       canvasContext.fillRect(
         ghostTargets[i].x * oneBlockSize,
@@ -279,9 +280,15 @@ let drawGhostsTarget = () => {
       );
     }
   } else {
-    drawPinkyTarget();
-    drawClydeTarget();
-    drawInkyTarget();
+    if (!ghosts[1].isScared && !ghosts[1].isDead) {
+      drawClydeTarget();
+    }
+    if (!ghosts[2].isScared && !ghosts[2].isDead) {
+      drawPinkyTarget();
+    }
+    if (!ghosts[3].isScared && !ghosts[3].isDead) {
+      drawInkyTarget();
+    }
   }
   // draw ghost targets
 
