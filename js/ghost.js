@@ -91,7 +91,8 @@ class Ghost {
     if (
       poped.x - 1 >= 0 &&
       poped.x - 1 < numOfCols &&
-      mp[poped.y][poped.x - 1] != 1
+      mp[poped.y][poped.x - 1] != 1 &&
+      mp[poped.y][poped.x - 1] != 6
     ) {
       let tempMoves = poped.moves.slice();
       if (
@@ -118,6 +119,7 @@ class Ghost {
       poped.x + 1 >= 0 &&
       poped.x + 1 < numOfCols &&
       mp[poped.y][poped.x + 1] != 1
+      && mp[poped.y][poped.x + 1] != 6
     ) {
       let tempMoves = poped.moves.slice();
       if (
@@ -144,6 +146,7 @@ class Ghost {
       poped.y - 1 >= 0 &&
       poped.y - 1 < numOfRows &&
       mp[poped.y - 1][poped.x] != 1
+      && mp[poped.y - 1][poped.x] != 6
     ) {
       let tempMoves = poped.moves.slice();
       if (
@@ -170,6 +173,7 @@ class Ghost {
       poped.y + 1 >= 0 &&
       poped.y + 1 < numOfRows &&
       mp[poped.y + 1][poped.x] != 1
+      && mp[poped.y + 1][poped.x] != 6
     ) {
       let tempMoves = poped.moves.slice();
       if (

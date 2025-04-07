@@ -194,6 +194,33 @@ let drawClydeTarget = () => {
     2 * Math.PI // End angle (e.g., 135 degrees)
   );
   canvasContext.stroke(); // Draw the outline
+  // if clyde is in the circle
+  let clyde = ghosts.find((ghost) => ghost.name === "Clyde");
+  let pacmanX = pacman.getMapX();
+  let pacmanY = pacman.getMapY();
+  let clydeX = clyde.getMapX();
+  let clydeY = clyde.getMapY();
+  let distance = Math.sqrt(
+    Math.pow(clydeX - pacmanX, 2) + Math.pow(clydeY - pacmanY, 2)
+  );
+  if (distance > 8) {
+    canvasContext.fillStyle = `rgba(255,127,80,0.5)`;
+    canvasContext.fillRect(
+      pacman.getMapX() * oneBlockSize,
+      pacman.getMapY() * oneBlockSize,
+      oneBlockSize,
+      oneBlockSize
+    );
+  } else {
+    canvasContext.fillStyle = `rgba(255,127,80,0.75)`;
+    canvasContext.fillRect(
+      clyde.st.x * oneBlockSize,
+      clyde.st.y * oneBlockSize,
+      oneBlockSize,
+      oneBlockSize
+    );
+  }
+
 };
 let drawInkyTarget = () => {
   // draw Inky target when chase mode
